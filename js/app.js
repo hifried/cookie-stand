@@ -1,271 +1,108 @@
 'use strict';
 
-// global variable here...
+// Global variables...
+
 var storeHours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm'];
+var storeTable = document.getElementById('stores');
 
-// object literal here...
-var firstAndPike = {
-  location: 'First and Pike',
-  custMin: 23,
-  custMax: 65,
-  avrgCookiesPerCust: 6.3,
-  hourlySales: [],
-  totalDailySales: 0,
+// Constructor function...
 
-  // Generate a random customer number between the store's min and max
-  getRandomCustomersPerHour: function () {
-    return Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin );
-  },
+function Store(location, custMin, custMax, avrgCookiesPerCust) {
+  this.location = location;
+  this.custMin = custMin;
+  this.custMax = custMax;
+  this.avrgCookiesPerCust = avrgCookiesPerCust;
+  this.hourlySales = [];
+  this.totalDailySales = 0;
+  Store.allStores.push(this);
+}
 
-  // To get hourly sales, multiply the random number (generated above) by the average cookies per customer
-  getRandomCookiesPerHour: function () {
+// Build array for all stores...
+Store.allStores = [];
 
-    for (var i = 0; i < storeHours.length; i++) {
-      var avg = Math.floor(this.getRandomCustomersPerHour() * this.avrgCookiesPerCust);
-      this.hourlySales.push(avg);
-    }
-  },
+// Make render method for constructor's prototype...
+Store.prototype.render = function () {
 
-  // Generate the total of the hourly sales of cookies
-  getHourlyTotals: function() {
-    for (var i = 0; i < this.hourlySales.length; i++) {
-      this.totalDailySales = this.totalDailySales + this.hourlySales[i];
-      // Or you can say: this.totalDailySales += this.hourlySales[i];
-    }
-    console.log(this.totalDailySales);
-  },
+  // Create tr
+  var trEl = document.createElement('tr');
 
+  // Create td
+  var tdEl = document.createElement('td');
+  // Give td content
+  tdEl.textContent = this.location;
+  // Append td to tr
+  trEl.appendChild(tdEl);
 
-  render: function () {
-    var pike = document.getElementById('pike'); // grabbing the parent element from the DOM
-
-    for(var i = 0; i < storeHours.length; i++) {
-      var liEl = document.createElement('li');  // create the element
-      liEl.textContent = `${storeHours[i]}: ${this.hourlySales[i]} cookies.`; // give it content 
-      pike.appendChild(liEl); // append it
-    }
+  for(var i = 0; i < storeHours.length; i++) {
+    var randCust = Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin);
     
-    // for the total daily sales portion 
-    liEl = document.createElement('li'); // create the element
-    liEl.textContent = `Total: ${this.totalDailySales} cookies.`;  // give it content
-    pike.appendChild(liEl);  // append it
+    var randCookies = Math.floor(randCust * this.avrgCookiesPerCust);
+  
+    tdEl = document.createElement('td');
+    tdEl.textContent = randCookies;
+    trEl.appendChild(tdEl);
   }
+
+  tdEl = document.createElement('td');
+  tdEl.textContent = this.totalDailySales;
+  trEl.appendChild(tdEl);
+
+  // Append tr to table...
+  storeTable.appendChild(trEl);
 };
+
+// Make separate function for table header...
+Store.renderHeader = function() {
+  // Make a new row...
+  var headerRow = document.createElement('tr');
+
+  var thEl = document.createElement('th');
+  thEl.textContent = 'Stores';
+  headerRow.appendChild(thEl);
+
+  // Make a for loop...
+  for(var i = 0; i < storeHours.length; i++) {
+    // Create a th element
+    thEl = document.createElement('th');
+    // Give it content
+    thEl.textContent = storeHours[i];
+    headerRow.appendChild(thEl);
+    // Prepend row to table
+    storeTable.prepend(headerRow);
+  }
+
+  thEl = document.createElement('th');
+  thEl.textContent = 'Daily Totals';
+  headerRow.appendChild(thEl);
+};
+
+// Store.renderFooter = function() {
+//   liEl = document.createElement('li');
+//   liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
+//   seattlecenter.appendChild(liEl);
+// var footerRow = document.createElement('tr');
+
+
+// }
+
+// Make global variables for each store, then call the render method of each instance
+
+
+var firstAndPike = new Store ('First and Pike', 23, 65, 6.3);
+var seaTac = new Store ('SeaTac Airport', 3, 24, 1.2);
+var seattleCenter = new Store ('Seattle Center', 11, 38, 3.7);
+var capHill = new Store ('Capitol Hill', 20, 38, 2.3);
+var alki = new Store ('Alki', 2, 16, 4.6);
+var totals = new Store ('Total', 0, 0, 0); //Must use nested for loop somewhere to derive the totals
 
 // Call the functions
-firstAndPike.getRandomCookiesPerHour();
-firstAndPike.getHourlyTotals();
+Store.renderHeader();
 firstAndPike.render();
-
-
-// object literal for SeaTac
-
-var seaTac = {
-  location: 'SeaTac Airport',
-  custMin: 3,
-  custMax: 24,
-  avrgCookiesPerCust: 1.2,
-  hourlySales: [],
-  totalDailySales: 0,
-
-  getRandomCustomersPerHour: function() {
-    return Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin );
-  }, 
-
-  getRandomCookiesPerHour: function() {
-    for (var i = 0; i < storeHours.length; i++) {
-      var avg = Math.floor(this.getRandomCustomersPerHour() * this.avrgCookiesPerCust);
-      this.hourlySales.push(avg);
-    }
-  },
-
-  getHourlyTotals: function () {
-    for (var i = 0; i < this.hourlySales.length; i++) {
-      this.totalDailySales = this.totalDailySales + this.hourlySales[i];
-    }
-  },
-
-  render: function() {
-    var seatac = document.getElementById('seatac');
-    for(var i = 0; i < storeHours.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = `${storeHours[i]}: ${this.hourlySales[i]} cookies.`;
-      seatac.appendChild(liEl);
-    }
-
-    liEl = document.createElement('li');
-    liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
-    seatac.appendChild(liEl);
-  }
-};
-
-seaTac.getRandomCookiesPerHour();
-seaTac.getHourlyTotals();
 seaTac.render();
-
-
-// object literal for Seattle Center
-
-var seattleCenter = {
-  location: 'Seattle Center',
-  custMin: 11,
-  custMax: 38,
-  avrgCookiesPerCust: 3.7,
-  hourlySales: [],
-  totalDailySales: 0,
-
-  getRandomCustomersPerHour: function() {
-    return Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin );
-  },
-
-  getRandomCookiesPerHour: function() {
-    for (var i = 0; i < storeHours.length; i++) {
-      var avg = Math.floor(this.getRandomCustomersPerHour() * this.avrgCookiesPerCust);
-      this.hourlySales.push(avg);
-    }
-  },
-
-  getHourlyTotals: function() {
-    for (var i = 0; i < this.hourlySales.length; i++) {
-      this.totalDailySales = this.totalDailySales + this.hourlySales[i];
-    }
-  },
-
-  render: function() {
-    var seattlecenter = document.getElementById('seattle-center');
-    for(var i = 0; i < storeHours.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = `${storeHours[i]}: ${this.hourlySales[i]} cookies.`;
-      seattlecenter.appendChild(liEl);
-    }
-
-    liEl = document.createElement('li');
-    liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
-    seattlecenter.appendChild(liEl);
-  }
-}; 
-
-seattleCenter.getRandomCookiesPerHour();
-seattleCenter.getHourlyTotals();
 seattleCenter.render();
-
-
-// object literal for Capitol Hill
-
-var capitolHill = {
-  location: 'Capitol Hill',
-  custMin: 20,
-  custMax: 38,
-  avrgCookiesPerCust: 2.3,
-  hourlySales: [],
-  totalDailySales: 0,
-
-  getRandomCustomersPerHour: function() {
-    return Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin );
-  },
-
-  getRandomCookiesPerHour: function() {
-    for (var i = 0; i < storeHours.length; i++) {
-      var avg = Math.floor(this.getRandomCustomersPerHour() * this.avrgCookiesPerCust);
-      this.hourlySales.push(avg);
-    }
-  },
-
-  getHourlyTotals: function() {
-    for (var i = 0; i < this.hourlySales.length; i++) {
-      this.totalDailySales = this.totalDailySales + this.hourlySales[i];
-    }
-  },
-
-  render: function() {
-    var capitolhill = document.getElementById('cap-hill');
-    for(var i = 0; i < storeHours.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = `${storeHours[i]}: ${this.hourlySales[i]} cookies.`;
-      capitolhill.appendChild(liEl);
-    }
-
-    liEl = document.createElement('li');
-    liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
-    capitolhill.appendChild(liEl);
-  }
-}; 
-
-capitolHill.getRandomCookiesPerHour();
-capitolHill.getHourlyTotals();
-capitolHill.render();
-
-
-// object literal for Alki
-
-var alki = {
-  location: 'Alki',
-  custMin: 2,
-  custMax: 16,
-  avrgCookiesPerCust: 2.6,
-  hourlySales: [],
-  totalDailySales: 0,
-
-  getRandomCustomersPerHour: function() {
-    return Math.floor( Math.random() * (this.custMax - this.custMin) + this.custMin );
-  },
-
-  getRandomCookiesPerHour: function() {
-    for (var i = 0; i < storeHours.length; i++) {
-      var avg = Math.floor(this.getRandomCustomersPerHour() * this.avrgCookiesPerCust);
-      this.hourlySales.push(avg);
-    }
-  },
-
-  getHourlyTotals: function() {
-    for (var i = 0; i < this.hourlySales.length; i++) {
-      this.totalDailySales = this.totalDailySales + this.hourlySales[i];
-    }
-  },
-
-  render: function() {
-    var alki = document.getElementById('alki');
-    for(var i = 0; i < storeHours.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = `${storeHours[i]}: ${this.hourlySales[i]} cookies.`;
-      alki.appendChild(liEl);
-    }
-
-    liEl = document.createElement('li');
-    liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
-    alki.appendChild(liEl);
-  }
-};
-
-alki.getRandomCookiesPerHour();
-alki.getHourlyTotals();
+capHill.render();
 alki.render();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+totals.render();
 
 
 
