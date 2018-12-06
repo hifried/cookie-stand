@@ -1,1 +1,45 @@
+* {
+	font-family: 'Muli', sans-serif;
+}
+
+body {
+  background: #4d6666;
+}
+
+h1 {
+  color: rgb(240, 158, 111);
+  font-size: 30px;
+}
+
+h2 {
+  color: white;
+  font-size: 60px;
+}
+
+h3 {
+  color: white;
+  font-size: 22px;
+}
+table {
+	border: 10px solid #4ABDAC;
+  empty-cells: hide;
+  
+}
+
+td {
+	padding: 10px;
+	border-radius: 15px;
+  border: 1px solid black;
+  background: white;
+}
+
+th {
+	background-color: #F7B733;
+	color: rgb(110, 41, 54);
+}
+
+img {
+  border-color: black;
+  border-width: 50px;
+}
 /* Try incline or incline block to place h elements horizontally instead of vertically */
