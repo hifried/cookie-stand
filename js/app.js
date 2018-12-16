@@ -38,6 +38,8 @@ Store.prototype.render = function () {
     
     var randCookies = Math.floor(randCust * this.avrgCookiesPerCust);
   
+    this.totalDailySales += randCookies
+
     tdEl = document.createElement('td');
     tdEl.textContent = randCookies;
     trEl.appendChild(tdEl);
@@ -76,14 +78,20 @@ Store.renderHeader = function() {
   headerRow.appendChild(thEl);
 };
 
-// Store.renderFooter = function() {
+Store.renderFooter = function() {
+  // Make a new row, make cell, give it content, append it to ...
+  var footerRow = document.createElement('tr');
+  var tdEl = document.createElement('td');
+  tdEl.textContent = 'Hourly Totals';
+  trEl.appendChild(tdEl);
+
 //   liEl = document.createElement('li');
 //   liEl.textContent = `Total: ${this.totalDailySales} cookies.`;
 //   seattlecenter.appendChild(liEl);
 // var footerRow = document.createElement('tr');
 
 
-// }
+};
 
 // Make global variables for each store, then call the render method of each instance
 
@@ -93,7 +101,7 @@ var seaTac = new Store ('SeaTac Airport', 3, 24, 1.2);
 var seattleCenter = new Store ('Seattle Center', 11, 38, 3.7);
 var capHill = new Store ('Capitol Hill', 20, 38, 2.3);
 var alki = new Store ('Alki', 2, 16, 4.6);
-var totals = new Store ('Total', 0, 0, 0); //Must use nested for loop somewhere to derive the totals
+
 
 // Call the functions
 Store.renderHeader();
@@ -102,7 +110,7 @@ seaTac.render();
 seattleCenter.render();
 capHill.render();
 alki.render();
-totals.render();
+
 
 
 
